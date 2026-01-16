@@ -20,16 +20,34 @@ CREATE TABLE Users (
     FOREIGN KEY (user_level_id) REFERENCES UserLevels(level_id)
 );
 
+CREATE TABLE Locations (
+    location_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    latitude DECIMAL(9,6) NOT NULL,
+    longitude DECIMAL(9,6) NOT NULL
+);
+
 CREATE TABLE MediaItems (
     media_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
+    location_id INT NULL,
     filename VARCHAR(255) NOT NULL,
     filesize INT NOT NULL,
     media_type VARCHAR(255) NOT NULL,
     title VARCHAR(255) NOT NULL,
     description VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (location_id) REFERENCES Locations(location_id)
+);
+
+CREATE TABLE VideoDetails (
+    media_id INT PRIMARY KEY,
+    duration_seconds INT NOT NULL,
+    width INT,
+    height INT,
+    codec VARCHAR(50),
+    FOREIGN KEY (media_id) REFERENCES MediaItems(media_id)
 );
 
 CREATE TABLE Comments (
@@ -74,10 +92,9 @@ CREATE TABLE MediaItemTags (
     FOREIGN KEY (tag_id) REFERENCES Tags(tag_id)
 );
 
+-- Insert the sample data MADE WITH AI
 
--- Insert the sample data
-
-INSERT INTO UserLevels (level_name) VALUES ('Admin'), ('User'), ('Guest');
+INSERT INTO UserLevels (level_name) VALUES ('Admin'), ('User');
 
 INSERT INTO Users (username, password, email, user_level_id) VALUES
 ('JohnDoe', 'to-be-hashed-pw1', 'johndoe@example.com', 2),
@@ -85,11 +102,18 @@ INSERT INTO Users (username, password, email, user_level_id) VALUES
 ('Anon5468', 'to-be-hashed-pw3', 'anon5468@example.com', 2),
 ('AdminUser', 'to-be-hashed-pw4', 'adminuser@example.com', 1);
 
-INSERT INTO MediaItems (user_id, filename, filesize, media_type, title, description) VALUES
-(1, 'sunset.jpg', 1024, 'image/jpeg', 'Sunset', 'A beautiful sunset'),
-(2, 'sample.mp4', 20480, 'video/mp4', 'Sample Video', 'A sample video file'),
-(2, 'ffd8.jpg', 2048, 'image/jpeg', 'Favorite food', null),
-(1, '2f9b.jpg', 1024, 'image/jpeg', 'Aksux and Jane', 'friends');
+INSERT INTO Locations (name, latitude, longitude) VALUES
+('Helsinki Center', 60.1699, 24.9384),
+('New York City', 40.7128, -74.0060);
+
+INSERT INTO MediaItems (user_id, location_id, filename, filesize, media_type, title, description) VALUES
+(1, 1, 'sunset.jpg', 1024, 'image/jpeg', 'Sunset', 'A beautiful sunset'),
+(2, 2, 'sample.mp4', 20480, 'video/mp4', 'Sample Video', 'A sample video file'),
+(2, NULL, 'ffd8.jpg', 2048, 'image/jpeg', 'Favorite food', NULL),
+(1, 1, '2f9b.jpg', 1024, 'image/jpeg', 'Aksux and Jane', 'friends');
+
+INSERT INTO VideoDetails (media_id, duration_seconds, width, height, codec) VALUES
+(2, 120, 1920, 1080, 'H.264');
 
 INSERT INTO Comments (media_id, user_id, comment_text) VALUES
 (1, 2, 'This is a wonderful photo!'),
