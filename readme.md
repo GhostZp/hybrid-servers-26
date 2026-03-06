@@ -1,3 +1,7 @@
-# Hybridisovellukset esimerkkipalvelimet
+# Hybridisovellukset palvelimet
 
-Laitettu kaikki sovellukset samaan repoon yksinkertaisuuden vuoksi (ei paras tapa)
+Annan hybrid-sovellus-projektin palvelimet. 
+
+Koodit ovat kopioitu opettajan esimerkki palvelimista, jotain pieniä asioita on muokattu.
+
+Databasessa on locations taulu mutta sitä ei käytetä tässä projektissa.
